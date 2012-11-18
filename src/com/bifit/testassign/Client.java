@@ -2,12 +2,14 @@ package com.bifit.testassign;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 public class Client {
 	
-	private StringBuffer lastName;
-	private StringBuffer firstName;
-	private StringBuffer surName;
+	private StringBuffer lastName = new StringBuffer(30);
+	private StringBuffer firstName = new StringBuffer(30);
+	private StringBuffer surName = new StringBuffer(30);
 	private Calendar dateOfBirth; 
 	private ArrayList<Account> accountList;
 	private ArrayList<Card> cardList;
@@ -35,14 +37,14 @@ public class Client {
 	public void setDateOfBirth(Calendar dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	public ArrayList<Account> getAccountList() {
-		return accountList;
+	public List<Account> getAccountList() {
+		return Collections.unmodifiableList(this.accountList);
 	}
 	public void setAccountList(ArrayList<Account> accountList) {
 		this.accountList = accountList;
 	}
-	public ArrayList<Card> getCardList() {
-		return cardList;
+	public List<Card> getCardList() {
+		return Collections.unmodifiableList(this.cardList);
 	}
 	public void setCardList(ArrayList<Card> cardList) {
 		this.cardList = cardList;
@@ -50,5 +52,4 @@ public class Client {
 	
 	
 	
-
 }

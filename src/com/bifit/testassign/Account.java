@@ -1,8 +1,14 @@
 package com.bifit.testassign;
 
 public class Account {
-	private StringBuffer accountNumber;
-	private StringBuffer accountCurrency;
+	private StringBuffer accountNumber= new StringBuffer(20);
+	private StringBuffer accountCurrency= new StringBuffer(3);
+	
+	public Account(StringBuffer accountNumber, StringBuffer accountCurrency) {
+		super();
+		this.accountNumber = accountNumber;
+		this.accountCurrency = accountCurrency;
+	}
 	
 	public StringBuffer getAccountNumber() {
 		return accountNumber;

@@ -2,9 +2,17 @@ package com.bifit.testassign;
 
 public class Card {
 
-	private StringBuffer type;
-	private StringBuffer cardNumber;
-	private StringBuffer cardCurrency;
+	private StringBuffer type = new StringBuffer(30);
+	private StringBuffer cardNumber = new StringBuffer(16);
+	private StringBuffer cardCurrency = new StringBuffer(3);
+	
+	public Card(StringBuffer type, StringBuffer cardNumber,
+			StringBuffer cardCurrency) {
+		super();
+		this.type = type;
+		this.cardNumber = cardNumber;
+		this.cardCurrency = cardCurrency;
+	}
 	
 	public StringBuffer getType() {
 		return type;
