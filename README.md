@@ -1,6 +1,3 @@
 BifitTestAssign
 ===============
-and stuff
-and
-lot
-of stuff
+small program for tuition on a new job
