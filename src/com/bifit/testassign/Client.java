@@ -50,6 +50,14 @@ public class Client {
 		this.cardList = cardList;
 	}
 	
+	public void addAccount(Account acc) {
+		this.accountList.add(acc);		
+	}
+	
+	public void addCard(Card card) {
+		this.cardList.add(card);
+	}
+	
 	
 	
 }
