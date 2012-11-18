@@ -65,7 +65,11 @@ public class Client {
 		this.surName = new StringBuffer(surName);
 		this.dateOfBirth = dateOfBirth;
 	}
-	
+	public Client getByName (String name) {
+		
+		
+		return null;
+	}
 	
 	
 }

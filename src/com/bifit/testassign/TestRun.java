@@ -1,16 +1,27 @@
 package com.bifit.testassign;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 
 public class TestRun {
 
 	/**
 	 * @param args
 	 */
+	 List<Client> clientList=new ArrayList<>() ; 
+	
 	public static void main(String[] args) {
-	   Client newClient = new Client("Ivanov","Ivan","Ivanovich",new Date());
+	   TestRun testInstance = new TestRun();
+		Client newClient = new Client("Ivanov","Ivan","Ivanovich",new Date());
+		testInstance.clientList.add(newClient);
+	   
 	   Client oldClient = new Client("Petrov","Vasily","Petrovich",new Date());
-	   Client existintClient = new Client("Pupkin","Vasiliy","Victorovich",new Date());
+	   testInstance.clientList.add(oldClient);
+	   Client existingClient = new Client("Pupkin","Vasiliy","Victorovich",new Date());
+	   testInstance.clientList.add(existingClient);
+	   
 	   
 	   
 	   
