@@ -1,8 +1,8 @@
 package com.bifit.testassign;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.text.DateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 public class TestRun {
@@ -10,22 +10,17 @@ public class TestRun {
 	/**
 	 * @param args
 	 */
-	 List<Client> clientList=new ArrayList<>() ; 
+	 Map<String,Client> clients= new HashMap<String, Client>() ;
 	
 	public static void main(String[] args) {
 	   TestRun testInstance = new TestRun();
 		Client newClient = new Client("Ivanov","Ivan","Ivanovich",new Date());
-		testInstance.clientList.add(newClient);
+		testInstance.clients.put(newClient.getFirstName()+" "+newClient.getLastName()+" "+newClient.getSurName(), newClient);
 	   
 	   Client oldClient = new Client("Petrov","Vasily","Petrovich",new Date());
-	   testInstance.clientList.add(oldClient);
+	   testInstance.clients.put(oldClient.getFirstName()+" "+oldClient.getLastName()+" "+oldClient.getSurName(), oldClient);
 	   Client existingClient = new Client("Pupkin","Vasiliy","Victorovich",new Date());
-	   testInstance.clientList.add(existingClient);
-	   
-	   
-	   
-	   
-	   
+	   testInstance.clients.put(existingClient.getFirstName()+" "+existingClient.getLastName()+" "+existingClient.getSurName(), existingClient);
 	   
 
 	}
@@ -33,8 +28,12 @@ public class TestRun {
 	/**
 	* Метод добавляет счет для клиента clientFio
 	*/
-	public void addAccount(String clientFio, String Account, String currency) {
+	public void addAccount(String clientFio, String account, String currency) {
 	
+		Client clientToAddInfo = clients.get(clientFio);
+		Account newAcc = new Account(account, currency);
+		clientToAddInfo.addAccount(newAcc);
+		
 	}
 	
 	/**
@@ -43,7 +42,24 @@ public class TestRun {
 	* <ФИО клиента> <Тип карты> <Номер карты> <Валюта>
 	*/
 	public void findAccountsAndCardsClients(String currency) {
-		
+		for (Map.Entry<String, Client> mapEntry: clients.entrySet()) {
+			Client acc = mapEntry.getValue();
+			List<Card>cards =  acc.getCardList();
+			List<Account> accounts = acc.getAccountList();
+			for (Account account : accounts) {
+				if (account.getAccountCurrency().equals(currency)) {
+					System.out.println(mapEntry.getKey()+ " "+ account.getAccountNumber()+ " "+ account.getAccountCurrency());
+				}
+				
+			}
+            for (Card card : cards) {
+                if (card.getCardCurrency().equals(currency)) {
+                    System.out.println(mapEntry.getKey()+ " "+ card.getType()+ " "+ card.getCardNumber()+ " "+card.getCardCurrency());
+                }
+
+            }
+
+		}
 	}
 	
 	/**
@@ -55,7 +71,21 @@ public class TestRun {
 	* .......................
 	*/
 	public void findClient(String firstName) {
-		
+		Client foundClient = clients.get(firstName);
+        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, Locale.getDefault());
+
+        System.out.println(firstName+" "+ df.format(foundClient.getDateOfBirth()));
+
+
+
+
+        for (Account accs: foundClient.getAccountList()) {
+
+
+        }
+
+
+
 	}
 	
 	/* Метод осуществляет импорт данных из заданного файла */

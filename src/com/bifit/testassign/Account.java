@@ -4,10 +4,10 @@ public class Account {
 	private StringBuffer accountNumber= new StringBuffer(20);
 	private StringBuffer accountCurrency= new StringBuffer(3);
 	
-	public Account(StringBuffer accountNumber, StringBuffer accountCurrency) {
+	public Account(String accountNumber, String accountCurrency) {
 		super();
-		this.accountNumber = accountNumber;
-		this.accountCurrency = accountCurrency;
+		this.accountNumber = new StringBuffer(accountNumber);
+		this.accountCurrency = new StringBuffer(accountCurrency);
 	}
 	
 	public StringBuffer getAccountNumber() {
