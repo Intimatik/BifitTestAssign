@@ -1,8 +1,6 @@
 package com.bifit.testassign;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.Map.Entry;
@@ -27,9 +25,12 @@ public class TestRun {
 
         try{
             testInstance.importData("/Users/Intimatik/DEV/import.txt");
+            testInstance.exportData("/Users/Intimatik/DEV/export.txt");
+            int a=0;
+            System.out.println(testInstance.clients.size());
         }
         catch (Exception e) {
-
+             e.printStackTrace();
         }
 
 
@@ -112,7 +113,8 @@ public class TestRun {
     public void importData(String path) throws Exception{
         BufferedReader scanner  =null;
         String firstName,secondName,lastname;
-        Date birthDate;  int i=0;
+        Date birthDate;
+        int i=0;
         String s;
         try{
             scanner = new BufferedReader(new FileReader(path));
@@ -130,7 +132,7 @@ public class TestRun {
 
                 if (s.equals("")) {
                     if (newClient!=null) {
-                        clients.put(newClient.getFirstName()+" "+newClient.getLastName()+" "+newClient.getSurName(),newClient);
+                        this.clients.put(newClient.getFirstName()+" "+newClient.getLastName()+" "+newClient.getSurName(),newClient);
                     }
                     if (account!=null && accountSet.size()!=0) {
                        accountSet.add(account);
@@ -147,7 +149,8 @@ public class TestRun {
                         cardSet = new HashSet<Card>();
                         card = null;
                         account = null;
-
+                        accIterator=0;
+                        cardIterator=0;
                     continue;
                 }
 
@@ -208,10 +211,47 @@ public class TestRun {
                 }
 
                 if (nameValue[0].contains("CARDS")) {
-                    continue;
+                    String[] tokens = nameValue[0].split("\\.");
+                    if (card==null & cardIterator==Integer.parseInt(tokens[1])){
+                        //create first card
+                        card = new Card();
+                    }
+
+                    if (card!=null & cardIterator!=Integer.parseInt(tokens[1])){
+                        //new card
+                        cardIterator++;
+                        cardSet.add(card);
+                        card = new Card();
+                    }
+
+                    if (tokens[2].equalsIgnoreCase("NUMBER")) {
+                        card.setCardNumber(nameValue[1]);
+                    }
+                    else if (tokens[2].equalsIgnoreCase("CURRENCY")){
+                        card.setCardCurrency(nameValue[1]);
+                    }
+                    else if (tokens[2].equalsIgnoreCase("TYPE")){
+                        card.setType(nameValue[1]);
+                        }
+
+
 
                 }
 
+
+            }
+
+            if (newClient!=null) {
+                this.clients.put(newClient.getFirstName()+" "+newClient.getLastName()+" "+newClient.getSurName(),newClient);
+            }
+            if (account!=null && accountSet.size()!=0) {
+                accountSet.add(account);
+                newClient.setAccountList(accountSet);
+            }
+
+            if (card!=null && cardSet.size()!=0) {
+                cardSet.add(card);
+                newClient.setCardList(cardSet);
             }
         }
         catch (IOException e) {
@@ -245,6 +285,49 @@ public class TestRun {
 
     /* Метод осуществляет экспорт данных в заданный файл */
     public void exportData(String path){
+              BufferedWriter writer=null;
+       try{
+          writer = new BufferedWriter(new PrintWriter(path));
 
+           writer.write("Content-Type=client_info");
+           writer.newLine();
+
+           for (Client client:clients.values()) {
+               writer.write("FIRST_NAME="+client.getFirstName().toString());
+               writer.write("SECOND_NAME="+client.getLastName().toString());
+               writer.write("MIDDLE_NAME="+client.getSurName().toString());
+//               writer.write("BIRTH_DATE="+client.getDateOfBirth().toString());
+               Set<Account> accounts= client.getAccountList();
+               Iterator<Account> iterator = accounts.iterator();
+               int i=0;
+               while (iterator.hasNext()) {
+                     Account acc = iterator.next();
+                     writer.write("ACCOUNTS"+i+"NUMBER="+acc.getAccountNumber().toString());
+                     writer.write("ACCOUNTS"+i+"CURRENCY="+acc.getAccountCurrency().toString());
+                     i++;
+                     }
+//               Set<Card> cards = client.getCardList();
+//               Iterator<Card> iteratorB = cards.iterator();
+//               int j=0;
+//               while (iteratorB.hasNext()) {
+//                   Card card = iteratorB.next();
+//                   writer.write("CARDS"+i+"TYPE="+card.getType().toString());
+//                   writer.write("CARDS"+i+"NUMBER="+card.getCardNumber().toString());
+//                   writer.write("CARDS"+i+"CURRENCY="+card.getCardCurrency().toString());
+//                   j++;
+//               }
+             writer.newLine();
+           }
+
+       }
+       catch (IOException e){
+           e.printStackTrace();
+       }
+        finally {
+           try{
+           writer.close();
+           }
+           catch (IOException e) {}
+       }
     }
 }
