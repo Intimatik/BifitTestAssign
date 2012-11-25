@@ -1,9 +1,6 @@
 package com.bifit.testassign;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Client {
 	
@@ -11,25 +8,25 @@ public class Client {
 	private StringBuffer firstName = new StringBuffer(30);
 	private StringBuffer surName = new StringBuffer(30);
 	private Date dateOfBirth; 
-	private ArrayList<Account> accountList;
-	private ArrayList<Card> cardList;
+	private HashSet<Account> accountList;
+	private HashSet<Card> cardList;
 	public StringBuffer getLastName() {
 		return lastName;
 	}
-	public void setLastName(StringBuffer lastName) {
-		this.lastName = lastName;
+	public void setLastName(String lastName) {
+		this.lastName = new StringBuffer(lastName);
 	}
 	public StringBuffer getFirstName() {
 		return firstName;
 	}
-	public void setFirstName(StringBuffer firstName) {
-		this.firstName = firstName;
+	public void setFirstName(String firstName) {
+		this.firstName = new StringBuffer(firstName);
 	}
 	public StringBuffer getSurName() {
 		return surName;
 	}
-	public void setSurName(StringBuffer surName) {
-		this.surName = surName;
+	public void setSurName(String surName) {
+		this.surName = new StringBuffer(surName);
 	}
 	public Date getDateOfBirth() {
 		return dateOfBirth;
@@ -37,16 +34,16 @@ public class Client {
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	public List<Account> getAccountList() {
-		return Collections.unmodifiableList(this.accountList);
+	public Set<Account> getAccountList() {
+		return Collections.unmodifiableSet(this.accountList);
 	}
-	public void setAccountList(ArrayList<Account> accountList) {
+	public void setAccountList(HashSet<Account> accountList) {
 		this.accountList = accountList;
 	}
-	public List<Card> getCardList() {
-		return Collections.unmodifiableList(this.cardList);
+	public Set<Card> getCardList() {
+		return Collections.unmodifiableSet(this.cardList);
 	}
-	public void setCardList(ArrayList<Card> cardList) {
+	public void setCardList(HashSet<Card> cardList) {
 		this.cardList = cardList;
 	}
 	
@@ -65,11 +62,7 @@ public class Client {
 		this.surName = new StringBuffer(surName);
 		this.dateOfBirth = dateOfBirth;
 	}
-	public Client getByName (String name) {
-		
-		
-		return null;
-	}
-	
-	
+
+    public Client() {
+    }
 }

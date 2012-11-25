@@ -17,19 +17,39 @@ public class Card {
 	public StringBuffer getType() {
 		return type;
 	}
-	public void setType(StringBuffer type) {
-		this.type = type;
+	public void setType(String type) {
+		this.type = new StringBuffer(type);
 	}
 	public StringBuffer getCardNumber() {
 		return cardNumber;
 	}
-	public void setCardNumber(StringBuffer cardNumber) {
-		this.cardNumber = cardNumber;
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = new StringBuffer(cardNumber);
 	}
 	public StringBuffer getCardCurrency() {
 		return cardCurrency;
 	}
-	public void setCardCurrency(StringBuffer cardCurrency) {
-		this.cardCurrency = cardCurrency;
+	public void setCardCurrency(String cardCurrency) {
+		this.cardCurrency = new StringBuffer(cardCurrency);
 	}
+
+    public Card() {
+        super();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int hashCode() {
+        return this.cardNumber.hashCode();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if ((o instanceof Card) & ((Card) o).getCardNumber().toString().equals(this.cardNumber.toString())){
+            return true;
+        }
+        else {return false;}
+
+    }
 }
+
+
