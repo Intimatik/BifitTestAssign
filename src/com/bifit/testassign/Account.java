@@ -1,9 +1,9 @@
 package com.bifit.testassign;
-
+///Класс Счета
 public class Account {
 	private StringBuffer accountNumber= new StringBuffer(20);
 	private StringBuffer accountCurrency= new StringBuffer(3);
-	
+
 	public Account(String accountNumber, String accountCurrency) {
 		super();
 		this.accountNumber = new StringBuffer(accountNumber);
@@ -25,7 +25,7 @@ public class Account {
 
     @Override
     public int hashCode() {
-        return this.accountNumber.hashCode();    //To change body of overridden methods use File | Settings | File Templates.
+        return this.accountNumber.hashCode();
     }
 
     public Account() {

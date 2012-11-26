@@ -1,5 +1,5 @@
 package com.bifit.testassign;
-
+ ///Класс клиент
 import java.util.*;
 
 public class Client {
@@ -51,17 +51,6 @@ public class Client {
 		this.accountList.add(acc);		
 	}
 	
-	public void addCard(Card card) {
-		this.cardList.add(card);
-	}
-	public Client(String lastName, String firstName,
-			String surName, Date dateOfBirth) {
-		super();
-		this.lastName = new StringBuffer(lastName);
-		this.firstName = new StringBuffer(firstName);
-		this.surName = new StringBuffer(surName);
-		this.dateOfBirth = dateOfBirth;
-	}
 
     public Client() {
     }

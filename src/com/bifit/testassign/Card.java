@@ -1,18 +1,11 @@
 package com.bifit.testassign;
-
+///класс Карта
 public class Card {
 
 	private StringBuffer type = new StringBuffer(30);
 	private StringBuffer cardNumber = new StringBuffer(16);
 	private StringBuffer cardCurrency = new StringBuffer(3);
-	
-	public Card(StringBuffer type, StringBuffer cardNumber,
-			StringBuffer cardCurrency) {
-		super();
-		this.type = type;
-		this.cardNumber = cardNumber;
-		this.cardCurrency = cardCurrency;
-	}
+
 	
 	public StringBuffer getType() {
 		return type;
@@ -34,12 +27,12 @@ public class Card {
 	}
 
     public Card() {
-        super();    //To change body of overridden methods use File | Settings | File Templates.
+        super();
     }
 
     @Override
     public int hashCode() {
-        return this.cardNumber.hashCode();    //To change body of overridden methods use File | Settings | File Templates.
+        return this.cardNumber.hashCode();
     }
 
     @Override

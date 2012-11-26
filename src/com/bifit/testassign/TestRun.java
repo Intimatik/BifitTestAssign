@@ -1,36 +1,25 @@
 package com.bifit.testassign;
 
 import java.io.*;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Map.Entry;
 
 
 public class TestRun {
 
-    /**
-     * @param args
-     */
+
     Map<String,Client> clients= new HashMap<String, Client>() ;
 
     public static void main(String[] args) {
         TestRun testInstance = new TestRun();
-//        Client newClient = new Client("Ivanov","Ivan","Ivanovich",new Date());
-//        testInstance.clients.put(newClient.getFirstName()+" "+newClient.getLastName()+" "+newClient.getSurName(), newClient);
-//
-//        Client oldClient = new Client("Petrov","Vasily","Petrovich",new Date());
-//        testInstance.clients.put(oldClient.getFirstName()+" "+oldClient.getLastName()+" "+oldClient.getSurName(), oldClient);
-//        Client existingClient = new Client("Pupkin","Vasiliy","Victorovich",new Date());
-//        testInstance.clients.put(existingClient.getFirstName()+" "+existingClient.getLastName()+" "+existingClient.getSurName(), existingClient);
 
         try{
-            testInstance.importData("/Users/Intimatik/DEV/import.txt");
-            testInstance.exportData("/Users/Intimatik/DEV/export.txt");
-            int a=0;
-            System.out.println(testInstance.clients.size());
-        }
+            testInstance.importData("/home/koltsov/import.txt");
+            testInstance.exportData("/home/koltsov/export.txt");
+            System.out.println("Проимпортировано объектов из файла: "+testInstance.clients.size());
+            }
         catch (Exception e) {
-             e.printStackTrace();
+            e.printStackTrace();
         }
 
 
@@ -43,7 +32,7 @@ public class TestRun {
 
         Client clientToAddInfo = clients.get(clientFio);
         if (clientToAddInfo==null) {
-            throw new IllegalArgumentException("client not found");
+            throw new IllegalArgumentException("Не удалось найти клиента по заданному ФИО");
         }
 
         Account newAcc = new Account(account, currency);
@@ -63,13 +52,13 @@ public class TestRun {
             Set<Card>cards =  acc.getCardList();
             Set<Account> accounts = acc.getAccountList();
             for (Account account : accounts) {
-                if (account.getAccountCurrency().equals(currency)) {
+                if (account.getAccountCurrency().toString().equals(currency)) {
                     System.out.println(mapEntry.getKey()+ " "+ account.getAccountNumber()+ " "+ account.getAccountCurrency());
                 }
 
             }
             for (Card card : cards) {
-                if (card.getCardCurrency().equals(currency)) {
+                if (card.getCardCurrency().toString().equals(currency)) {
                     System.out.println(mapEntry.getKey()+ " "+ card.getType()+ " "+ card.getCardNumber()+ " "+card.getCardCurrency());
                 }
 
@@ -85,15 +74,15 @@ public class TestRun {
      * ......................
      * <Тип карты> <Номер карты> <Валюта>
      * .......................
-     */    //#TODO add pattern matching
+     */
     public void findClient(String firstName) throws Exception {
         Client foundClient = clients.get(firstName);
 
         if (foundClient==null) {
-            throw new IllegalArgumentException("client not found");
+            throw new IllegalArgumentException("Не удалось найти клиента по заданному ФИО");
         }
 
-        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
         System.out.println(firstName + " " + df.format(foundClient.getDateOfBirth()));
 
@@ -113,8 +102,6 @@ public class TestRun {
     public void importData(String path) throws Exception{
         BufferedReader scanner  =null;
         String firstName,secondName,lastname;
-        Date birthDate;
-        int i=0;
         String s;
         try{
             scanner = new BufferedReader(new FileReader(path));
@@ -129,36 +116,35 @@ public class TestRun {
 
 
             while ((s=scanner.readLine())!=null) {
-
+                 //если это новый блок данных, нужно создать новый объект и записать существующий
                 if (s.equals("")) {
                     if (newClient!=null) {
                         this.clients.put(newClient.getFirstName()+" "+newClient.getLastName()+" "+newClient.getSurName(),newClient);
                     }
                     if (account!=null && accountSet.size()!=0) {
-                       accountSet.add(account);
-                       newClient.setAccountList(accountSet);
-                       }
+                        accountSet.add(account);
+                        newClient.setAccountList(accountSet);
+                    }
 
                     if (card!=null && cardSet.size()!=0) {
                         cardSet.add(card);
                         newClient.setCardList(cardSet);
                     }
 
-                        newClient = new Client();
-                        accountSet = new HashSet<Account>();
-                        cardSet = new HashSet<Card>();
-                        card = null;
-                        account = null;
-                        accIterator=0;
-                        cardIterator=0;
+                    newClient = new Client();
+                    accountSet = new HashSet<Account>();
+                    cardSet = new HashSet<Card>();
+                    card = null;
+                    account = null;
+                    accIterator=0;
+                    cardIterator=0;
                     continue;
                 }
 
-                //fulfil it
+                //ищем ключ в файле и заполняем поле в классе его значением
                 String[] nameValue= scanLine(s);
 
-                System.out.println(nameValue);
-                if (nameValue[0].equalsIgnoreCase("FIRST_NAME")){
+                    if (nameValue[0].equalsIgnoreCase("FIRST_NAME")){
                     firstName = nameValue[1];
                     newClient.setFirstName(firstName);
                     continue;
@@ -179,12 +165,17 @@ public class TestRun {
 
 
                 if (nameValue[0].equalsIgnoreCase("BIRTH_DATE")){
-//                     #TODO add date parse
-                    birthDate = new Date();
+                    String[] tokens = nameValue[1].split("\\.");
+                    Calendar newCal = Calendar.getInstance();
+                    newCal.set(Calendar.DAY_OF_MONTH,Integer.parseInt(tokens[0]));
+                    newCal.set(Calendar.MONTH, Integer.parseInt(tokens[1])-1);
+                    newCal.set(Calendar.YEAR, Integer.parseInt(tokens[2]));
+                    newClient.setDateOfBirth(newCal.getTime());
+
                     continue;
 
                 }
-
+                   //для счетов
                 if (nameValue[0].contains("ACCOUNTS")) {
                     String[] tokens = nameValue[0].split("\\.");
                     if (account==null & accIterator==Integer.parseInt(tokens[1])){
@@ -209,7 +200,7 @@ public class TestRun {
                     continue;
 
                 }
-
+                //для карт
                 if (nameValue[0].contains("CARDS")) {
                     String[] tokens = nameValue[0].split("\\.");
                     if (card==null & cardIterator==Integer.parseInt(tokens[1])){
@@ -232,7 +223,7 @@ public class TestRun {
                     }
                     else if (tokens[2].equalsIgnoreCase("TYPE")){
                         card.setType(nameValue[1]);
-                        }
+                    }
 
 
 
@@ -240,7 +231,7 @@ public class TestRun {
 
 
             }
-
+            //после окончания загрузки из файла записываем все
             if (newClient!=null) {
                 this.clients.put(newClient.getFirstName()+" "+newClient.getLastName()+" "+newClient.getSurName(),newClient);
             }
@@ -255,18 +246,19 @@ public class TestRun {
             }
         }
         catch (IOException e) {
-            throw new IllegalArgumentException("something's wrong with the file");
+            throw new IllegalArgumentException("ошибка при импорте из файла "+path);
         }
 
         finally {
-
+             try {
             scanner.close();
-
+             }
+             catch (Exception e) {throw new IllegalArgumentException("ошибка при закрытии файла "+path);}
         }
 
 
     }
-
+    ///класс делит строку на массив String[0]-параметр,String[1]-значение
     private String[] scanLine(String s) {
         Scanner scanner = new Scanner(s);
         scanner.useDelimiter("=");
@@ -284,59 +276,63 @@ public class TestRun {
     }
 
     /* Метод осуществляет экспорт данных в заданный файл */
-    public void exportData(String path){
-              BufferedWriter writer=null;
-       try{
-          writer = new BufferedWriter(new PrintWriter(path));
+    public void exportData(String path) throws  Exception{
+        BufferedWriter writer=null;
+        try{
+            writer = new BufferedWriter(new PrintWriter(path));
 
-           writer.write("Content-Type=client_info");
-           writer.newLine();
-           writer.newLine();
+            writer.write("Content-Type=client_info");
+            writer.newLine();
+            writer.newLine();
 
-           for (Client client:clients.values()) {
-               writer.write("FIRST_NAME="+client.getFirstName().toString());
-               writer.newLine();
-               writer.write("SECOND_NAME="+client.getLastName().toString());
-               writer.newLine();
-               writer.write("MIDDLE_NAME="+client.getSurName().toString());
-               writer.newLine();
-//               writer.write("BIRTH_DATE="+client.getDateOfBirth().toString());
-               Set<Account> accounts= client.getAccountList();
-               Iterator<Account> iterator = accounts.iterator();
-               int i=0;
-               while (iterator.hasNext()) {
-                     Account acc = iterator.next();
-                     writer.write("ACCOUNTS."+i+".NUMBER="+acc.getAccountNumber().toString());
-                   writer.newLine();
-                     writer.write("ACCOUNTS."+i+".CURRENCY="+acc.getAccountCurrency().toString());
-                   writer.newLine();
-                     i++;
-                     }
-               Set<Card> cards = client.getCardList();
-               Iterator<Card> iteratorB = cards.iterator();
-               int j=0;
-               while (iteratorB.hasNext()) {
-                   Card card = iteratorB.next();
-                   writer.write("CARDS."+i+".TYPE="+card.getType().toString());
-                   writer.newLine();
-                   writer.write("CARDS."+i+".NUMBER="+card.getCardNumber().toString());
-                   writer.newLine();
-                   writer.write("CARDS."+i+".CURRENCY="+card.getCardCurrency().toString());
-                   writer.newLine();
-                   j++;
-               }
-             writer.newLine();
-           }
+            for (Client client:clients.values()) {
+                writer.write("FIRST_NAME="+client.getFirstName().toString());
+                writer.newLine();
+                writer.write("SECOND_NAME="+client.getLastName().toString());
+                writer.newLine();
+                writer.write("MIDDLE_NAME="+client.getSurName().toString());
+                writer.newLine();
+                SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+                writer.write("BIRTH_DATE="+df.format(client.getDateOfBirth()));
+                writer.newLine();
+                Set<Account> accounts= client.getAccountList();
+                Iterator<Account> iterator = accounts.iterator();
+                int i=0;
+                while (iterator.hasNext()) {
+                    Account acc = iterator.next();
+                    writer.write("ACCOUNTS."+i+".NUMBER="+acc.getAccountNumber().toString());
+                    writer.newLine();
+                    writer.write("ACCOUNTS."+i+".CURRENCY="+acc.getAccountCurrency().toString());
+                    writer.newLine();
+                    i++;
+                }
+                Set<Card> cards = client.getCardList();
+                Iterator<Card> iteratorB = cards.iterator();
+                int j=0;
+                while (iteratorB.hasNext()) {
+                    Card card = iteratorB.next();
+                    writer.write("CARDS."+j+".TYPE="+card.getType().toString());
+                    writer.newLine();
+                    writer.write("CARDS."+j+".NUMBER="+card.getCardNumber().toString());
+                    writer.newLine();
+                    writer.write("CARDS."+j+".CURRENCY="+card.getCardCurrency().toString());
+                    writer.newLine();
+                    j++;
+                }
+                writer.newLine();
+            }
 
-       }
-       catch (IOException e){
-           e.printStackTrace();
-       }
+        }
+        catch (IOException e){
+            throw new IOException("Ошибка при экспорте в файл "+path);
+        }
         finally {
-           try{
-           writer.close();
-           }
-           catch (IOException e) {}
-       }
+            try{
+                writer.close();
+            }
+            catch (IOException e) {
+                throw  new IOException("Ошибка при сохранениии файла "+path);
+            }
+        }
     }
 }
