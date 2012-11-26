@@ -15,13 +15,13 @@ public class TestRun {
 
     public static void main(String[] args) {
         TestRun testInstance = new TestRun();
-        Client newClient = new Client("Ivanov","Ivan","Ivanovich",new Date());
-        testInstance.clients.put(newClient.getFirstName()+" "+newClient.getLastName()+" "+newClient.getSurName(), newClient);
-
-        Client oldClient = new Client("Petrov","Vasily","Petrovich",new Date());
-        testInstance.clients.put(oldClient.getFirstName()+" "+oldClient.getLastName()+" "+oldClient.getSurName(), oldClient);
-        Client existingClient = new Client("Pupkin","Vasiliy","Victorovich",new Date());
-        testInstance.clients.put(existingClient.getFirstName()+" "+existingClient.getLastName()+" "+existingClient.getSurName(), existingClient);
+//        Client newClient = new Client("Ivanov","Ivan","Ivanovich",new Date());
+//        testInstance.clients.put(newClient.getFirstName()+" "+newClient.getLastName()+" "+newClient.getSurName(), newClient);
+//
+//        Client oldClient = new Client("Petrov","Vasily","Petrovich",new Date());
+//        testInstance.clients.put(oldClient.getFirstName()+" "+oldClient.getLastName()+" "+oldClient.getSurName(), oldClient);
+//        Client existingClient = new Client("Pupkin","Vasiliy","Victorovich",new Date());
+//        testInstance.clients.put(existingClient.getFirstName()+" "+existingClient.getLastName()+" "+existingClient.getSurName(), existingClient);
 
         try{
             testInstance.importData("/Users/Intimatik/DEV/import.txt");
@@ -244,12 +244,12 @@ public class TestRun {
             if (newClient!=null) {
                 this.clients.put(newClient.getFirstName()+" "+newClient.getLastName()+" "+newClient.getSurName(),newClient);
             }
-            if (account!=null && accountSet.size()!=0) {
+            if (account!=null) {
                 accountSet.add(account);
                 newClient.setAccountList(accountSet);
             }
 
-            if (card!=null && cardSet.size()!=0) {
+            if (card!=null) {
                 cardSet.add(card);
                 newClient.setCardList(cardSet);
             }
@@ -291,31 +291,40 @@ public class TestRun {
 
            writer.write("Content-Type=client_info");
            writer.newLine();
+           writer.newLine();
 
            for (Client client:clients.values()) {
                writer.write("FIRST_NAME="+client.getFirstName().toString());
+               writer.newLine();
                writer.write("SECOND_NAME="+client.getLastName().toString());
+               writer.newLine();
                writer.write("MIDDLE_NAME="+client.getSurName().toString());
+               writer.newLine();
 //               writer.write("BIRTH_DATE="+client.getDateOfBirth().toString());
                Set<Account> accounts= client.getAccountList();
                Iterator<Account> iterator = accounts.iterator();
                int i=0;
                while (iterator.hasNext()) {
                      Account acc = iterator.next();
-                     writer.write("ACCOUNTS"+i+"NUMBER="+acc.getAccountNumber().toString());
-                     writer.write("ACCOUNTS"+i+"CURRENCY="+acc.getAccountCurrency().toString());
+                     writer.write("ACCOUNTS."+i+".NUMBER="+acc.getAccountNumber().toString());
+                   writer.newLine();
+                     writer.write("ACCOUNTS."+i+".CURRENCY="+acc.getAccountCurrency().toString());
+                   writer.newLine();
                      i++;
                      }
-//               Set<Card> cards = client.getCardList();
-//               Iterator<Card> iteratorB = cards.iterator();
-//               int j=0;
-//               while (iteratorB.hasNext()) {
-//                   Card card = iteratorB.next();
-//                   writer.write("CARDS"+i+"TYPE="+card.getType().toString());
-//                   writer.write("CARDS"+i+"NUMBER="+card.getCardNumber().toString());
-//                   writer.write("CARDS"+i+"CURRENCY="+card.getCardCurrency().toString());
-//                   j++;
-//               }
+               Set<Card> cards = client.getCardList();
+               Iterator<Card> iteratorB = cards.iterator();
+               int j=0;
+               while (iteratorB.hasNext()) {
+                   Card card = iteratorB.next();
+                   writer.write("CARDS."+i+".TYPE="+card.getType().toString());
+                   writer.newLine();
+                   writer.write("CARDS."+i+".NUMBER="+card.getCardNumber().toString());
+                   writer.newLine();
+                   writer.write("CARDS."+i+".CURRENCY="+card.getCardCurrency().toString());
+                   writer.newLine();
+                   j++;
+               }
              writer.newLine();
            }
 
